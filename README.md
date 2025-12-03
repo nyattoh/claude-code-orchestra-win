@@ -2,7 +2,7 @@
 
 ## 🚀 使い方
 
-### 方法1: 新規プロジェクトを作成
+### 方法1: 新規プロジェクトを作成（推奨）
 
 GitHubの "Use this template" ボタンを使用：
 
@@ -19,7 +19,7 @@ cd your-new-project
 
 **または CLI で：**
 ```bash
-gh repo create my-new-project --template YOUR_USERNAME/llm-dev-template --clone
+gh repo create my-new-project --template DeL-TaiseiOzaki/Claude-code4LLMdev --clone
 cd my-new-project
 ```
 
@@ -31,16 +31,15 @@ cd my-new-project
 cd your-existing-project
 
 # テンプレートから必要なファイルを取得
-git clone --depth 1 https://github.com/YOUR_USERNAME/llm-dev-template.git /tmp/cc-template
+git clone --depth 1 https://github.com/DeL-TaiseiOzaki/Claude-code4LLMdev.git /tmp/cc-template
 cp -r /tmp/cc-template/.claude .
 cp -r /tmp/cc-template/docs .
 cp /tmp/cc-template/CLAUDE.md .
-cp /tmp/cc-template/.gitignore .gitignore.claude  # 必要な行を既存の.gitignoreにマージ
 rm -rf /tmp/cc-template
 
 # コミット
 git add .claude docs CLAUDE.md
-git commit -m "Add Claude Code configuration from llm-dev-template"
+git commit -m "Add Claude Code configuration from Claude-code4LLMdev"
 ```
 
 ### セットアップ後にやること
@@ -171,5 +170,3 @@ CLAUDE.md                      # プロジェクトメモリ
   }
 }
 ```
-
-これで他のユーザー（自分含む）が "Use this template" ボタンで新規プロジェクトを作成できます．
