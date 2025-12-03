@@ -33,12 +33,11 @@ cd your-existing-project
 # テンプレートから必要なファイルを取得
 git clone --depth 1 https://github.com/DeL-TaiseiOzaki/Claude-code4LLMdev.git /tmp/cc-template
 cp -r /tmp/cc-template/.claude .
-cp -r /tmp/cc-template/docs .
 cp /tmp/cc-template/CLAUDE.md .
 rm -rf /tmp/cc-template
 
 # コミット
-git add .claude docs CLAUDE.md
+git add .claude CLAUDE.md
 git commit -m "Add Claude Code configuration from Claude-code4LLMdev"
 ```
 
