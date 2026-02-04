@@ -60,7 +60,7 @@ Task tool parameters:
 
     codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
     {question for Codex}
-    " 2>/dev/null
+    "
 
     Return CONCISE summary (key recommendation + rationale).
 ```
@@ -70,7 +70,7 @@ Task tool parameters:
 For quick questions expecting 1-2 sentence answers:
 
 ```bash
-codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question" 2>/dev/null
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question"
 ```
 
 ### Workflow (Subagent)
@@ -109,7 +109,7 @@ Evaluate:
 2. Alternative approaches?
 3. Potential issues?
 4. Recommendations?
-" 2>/dev/null
+"
 ```
 
 ### Debug Analysis
@@ -123,7 +123,7 @@ Code: {relevant code}
 Context: {what was happening}
 
 Analyze root cause and suggest fixes.
-" 2>/dev/null
+"
 ```
 
 ### Code Review

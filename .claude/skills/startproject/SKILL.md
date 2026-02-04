@@ -54,7 +54,7 @@ Task tool parameters:
        2. Relevant existing code and patterns
        3. Library recommendations
        4. Technical considerations
-       " --include-directories . 2>/dev/null
+       " --include-directories .
 
     2. Save full output to: .claude/docs/research/{feature}.md
 
@@ -101,7 +101,7 @@ Task tool parameters:
        2. Risk analysis
        3. Implementation order
        4. Improvements
-       " 2>/dev/null
+       "
 
     2. Return CONCISE summary:
        - Top 3-5 recommendations
@@ -184,7 +184,7 @@ Task tool parameters:
        2. Potential bugs
        3. Missing edge cases
        4. Security concerns
-       " 2>/dev/null
+       "
 
     3. Return findings and recommendations
 ```

@@ -68,7 +68,7 @@ Task tool parameters:
 - prompt: |
     Research: {topic}
 
-    gemini -p "{research question}" 2>/dev/null
+    gemini -p "{research question}"
 
     Save full output to: .claude/docs/research/{topic}.md
     Return CONCISE summary (5-7 bullet points).
@@ -79,20 +79,20 @@ Task tool parameters:
 For quick questions expecting brief answers:
 
 ```bash
-gemini -p "Brief question" 2>/dev/null
+gemini -p "Brief question"
 ```
 
 ### CLI Options Reference
 
 ```bash
 # Codebase analysis
-gemini -p "{question}" --include-directories . 2>/dev/null
+gemini -p "{question}" --include-directories .
 
 # Multimodal (PDF/video/audio)
-gemini -p "{prompt}" < /path/to/file.pdf 2>/dev/null
+gemini -p "{prompt}" < /path/to/file.pdf
 
 # JSON output
-gemini -p "{question}" --output-format json 2>/dev/null
+gemini -p "{question}" --output-format json
 ```
 
 ### Workflow (Subagent)
@@ -129,7 +129,7 @@ Include:
 - Library recommendations (with comparison)
 - Performance considerations
 - Security concerns
-- Code examples" 2>/dev/null
+- Code examples"
 ```
 
 ### Repository Analysis
@@ -140,7 +140,7 @@ gemini -p "Analyze this repository:
 2. Key modules and responsibilities
 3. Data flow between components
 4. Entry points and extension points
-5. Existing patterns to follow" --include-directories . 2>/dev/null
+5. Existing patterns to follow" --include-directories .
 ```
 
 ### Library Research
@@ -151,13 +151,13 @@ See: `references/lib-research-task.md`
 
 ```bash
 # Video
-gemini -p "Analyze video: main concepts, key points, timestamps" < tutorial.mp4 2>/dev/null
+gemini -p "Analyze video: main concepts, key points, timestamps" < tutorial.mp4
 
 # PDF
-gemini -p "Extract: API specs, examples, constraints" < api-docs.pdf 2>/dev/null
+gemini -p "Extract: API specs, examples, constraints" < api-docs.pdf
 
 # Audio
-gemini -p "Transcribe and summarize: decisions, action items" < meeting.mp3 2>/dev/null
+gemini -p "Transcribe and summarize: decisions, action items" < meeting.mp3
 ```
 
 ## Integration with Codex

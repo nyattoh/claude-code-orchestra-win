@@ -101,7 +101,7 @@ def main():
                     "additionalContext": (
                         f"[Agent Routing] Detected '{trigger}' - this task may benefit from "
                         "Gemini CLI's research capabilities. Consider: "
-                        '`gemini -p "Research: {topic}" 2>/dev/null` '
+                        '`gemini -p "Research: {topic}"` '
                         "for documentation, library research, or multimodal content."
                     )
                 }
