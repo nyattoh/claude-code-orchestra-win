@@ -12,11 +12,23 @@ if (-not (Get-Command "git" -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# Cleanup existing temporary directory if it exists
+if (Test-Path $tempDir) {
+    Write-Host "Removing existing temporary directory..."
+    try {
+        Remove-Item -Path $tempDir -Recurse -Force -ErrorAction Stop
+    }
+    catch {
+        Write-Error "Failed to remove existing temporary directory '$tempDir'. Please remove it manually and try again."
+        exit 1
+    }
+}
+
 # Clone the repository
 Write-Host "Cloning template from $repoUrl..."
 git clone --depth 1 $repoUrl $tempDir
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to clone repository."
+    Write-Error "Failed to clone repository. Exit code: $LASTEXITCODE"
     exit 1
 }
 
