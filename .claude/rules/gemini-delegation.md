@@ -91,6 +91,7 @@ Skip Gemini for:
 
 Use Task tool with `subagent_type: "general-purpose"`:
 
+**Unix/macOS:**
 ```
 Task tool parameters:
 - subagent_type: "general-purpose"
@@ -109,9 +110,44 @@ Task tool parameters:
        - Important caveats
 ```
 
+**Windows PowerShell:**
+```
+Task tool parameters:
+- subagent_type: "general-purpose"
+- run_in_background: true (for parallel work)
+- prompt: |
+    Research: {topic}
+
+    1. Call Gemini CLI:
+       gemini -p '{research question}' 2>$null
+
+    2. Save full output to: .claude/docs/research/{topic}.md
+
+    3. Return CONCISE summary (5-7 bullet points):
+       - Key findings
+       - Recommended approach
+       - Important caveats
+```
+
+### Windows PowerShell Compatibility
+
+**IMPORTANT:** When running on Windows PowerShell, command syntax differs:
+
+| Feature | Unix/macOS | Windows PowerShell |
+|---------|------------|-------------------|
+| **Suppress stderr** | `2>/dev/null` | `2>$null` |
+| **String quotes** | `"..."` | Use single quotes `'...'` |
+| **Command name** | `gemini` | `gemini` (or `gemini.cmd`) |
+| **File input** | `< file.pdf` | `Get-Content file.pdf -Raw \| gemini ...` |
+
+**Troubleshooting on Windows:**
+- If `gemini` command not found: Ensure npm global packages are in PATH
+- Add to PATH: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use full path: `& "$env:APPDATA\npm\gemini.cmd" ...`
+
 ### Subagent Patterns by Task Type
 
-**Research Pattern:**
+**Research Pattern (Unix/macOS):**
 ```
 prompt: |
   Research best practices for {topic}.
@@ -123,7 +159,19 @@ prompt: |
   Return 5-7 key bullet points.
 ```
 
-**Codebase Analysis Pattern:**
+**Research Pattern (Windows PowerShell):**
+```
+prompt: |
+  Research best practices for {topic}.
+
+  gemini -p 'Research: {topic}. Include recommended approaches,
+  common pitfalls, and library recommendations.' 2>$null
+
+  Save to .claude/docs/research/{topic}.md
+  Return 5-7 key bullet points.
+```
+
+**Codebase Analysis Pattern (Unix/macOS):**
 ```
 prompt: |
   Analyze codebase for {purpose}.
@@ -135,12 +183,35 @@ prompt: |
   Return architecture summary and key insights.
 ```
 
-**Multimodal Pattern:**
+**Codebase Analysis Pattern (Windows PowerShell):**
+```
+prompt: |
+  Analyze codebase for {purpose}.
+
+  gemini -p 'Analyze architecture, key modules, data flow,
+  and entry points.' --include-directories . 2>$null
+
+  Save to .claude/docs/research/codebase-analysis.md
+  Return architecture summary and key insights.
+```
+
+**Multimodal Pattern (Unix/macOS):**
 ```
 prompt: |
   Extract information from {file}.
 
   gemini -p "{extraction prompt}" < {file_path} 2>/dev/null
+
+  Save to .claude/docs/research/{output}.md
+  Return key extracted information.
+```
+
+**Multimodal Pattern (Windows PowerShell):**
+```
+prompt: |
+  Extract information from {file}.
+
+  Get-Content {file_path} -Raw | gemini -p '{extraction prompt}' 2>$null
 
   Save to .claude/docs/research/{output}.md
   Return key extracted information.
@@ -161,6 +232,7 @@ Subagent returns concise summary. Full output available in `.claude/docs/researc
 
 For use within subagents:
 
+**Unix/macOS:**
 ```bash
 # Research
 gemini -p "{question}" 2>/dev/null
@@ -173,6 +245,21 @@ gemini -p "{prompt}" < /path/to/file.pdf 2>/dev/null
 
 # JSON output
 gemini -p "{question}" --output-format json 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+# Research
+gemini -p '{question}' 2>$null
+
+# Codebase analysis
+gemini -p '{question}' --include-directories . 2>$null
+
+# Multimodal
+Get-Content /path/to/file.pdf -Raw | gemini -p '{prompt}' 2>$null
+
+# JSON output
+gemini -p '{question}' --output-format json 2>$null
 ```
 
 **Language protocol:**
