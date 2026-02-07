@@ -53,6 +53,7 @@ You handle tasks that preserve the main orchestrator's context:
 
 When design decisions, debugging, or deep analysis is needed:
 
+**Unix/macOS:**
 ```bash
 # Analysis (read-only)
 codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "{question}" 2>/dev/null
@@ -60,6 +61,19 @@ codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "{question}" 2>
 # Implementation work (can write files)
 codex exec --model gpt-5.2-codex --sandbox workspace-write --full-auto "{task}" 2>/dev/null
 ```
+
+**Windows PowerShell:**
+```powershell
+# Analysis (read-only)
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto '{question}' 2>$null
+
+# Implementation work (can write files)
+codex exec --model gpt-5.2-codex --sandbox workspace-write --full-auto '{task}' 2>$null
+```
+
+**Windows Troubleshooting:**
+- If `codex` not found: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use: `& "$env:APPDATA\npm\codex.cmd" ...`
 
 **When to call Codex:**
 - Design decisions: "How should I structure this?"
@@ -71,6 +85,7 @@ codex exec --model gpt-5.2-codex --sandbox workspace-write --full-auto "{task}" 
 
 When research or large-scale analysis is needed:
 
+**Unix/macOS:**
 ```bash
 # Research
 gemini -p "{research question}" 2>/dev/null
@@ -82,10 +97,48 @@ gemini -p "{question}" --include-directories . 2>/dev/null
 gemini -p "{extraction prompt}" < /path/to/file 2>/dev/null
 ```
 
+**Windows PowerShell:**
+```powershell
+# Research
+gemini -p '{research question}' 2>$null
+
+# Codebase analysis
+gemini -p '{question}' --include-directories . 2>$null
+
+# Multimodal (PDF, video, audio)
+Get-Content /path/to/file -Raw | gemini -p '{extraction prompt}' 2>$null
+```
+
+**Windows Troubleshooting:**
+- If `gemini` not found: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use: `& "$env:APPDATA\npm\gemini.cmd" ...`
+
 **When to call Gemini:**
 - Library research: "Best practices for X in 2025"
 - Codebase understanding: "Analyze architecture"
 - Multimodal: "Extract info from this PDF"
+
+## Windows PowerShell Compatibility
+
+When running on Windows PowerShell, be aware of these syntax differences:
+
+| Feature | Unix/macOS | Windows PowerShell |
+|---------|------------|-------------------|
+| **Suppress stderr** | `2>/dev/null` | `2>$null` |
+| **String quotes** | `"..."` | Use single quotes `'...'` |
+| **Command name** | `codex` / `gemini` | Same (or `.cmd` suffix if issues) |
+| **File input** | `< file.pdf` | `Get-Content file.pdf -Raw \| ...` |
+| **PATH issues** | Rare | Common - may need to add npm to PATH |
+
+**Fixing PATH issues on Windows:**
+```powershell
+# Add npm global to PATH for current session
+$env:PATH += ";$env:APPDATA\npm"
+
+# Or use full path to CLI
+& "$env:APPDATA\npm\codex.cmd" exec --model gpt-5.2-codex ...
+& "$env:APPDATA\npm\gemini.cmd" -p "..."
+```
 
 ## Working Principles
 

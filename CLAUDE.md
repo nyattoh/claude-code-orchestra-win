@@ -97,6 +97,68 @@ Bash("codex exec ... '1文で答えて'")
 
 ---
 
+## Windows PowerShell トラブルシューティング
+
+Windows PowerShell から Codex CLI / Gemini CLI を呼び出す際の注意点:
+
+### よくある問題
+
+| 問題 | 原因 | 解決策 |
+|------|------|--------|
+| `codex` / `gemini` が見つからない | PATHにnpm globalが含まれていない | `$env:PATH += ";$env:APPDATA\npm"` |
+| `2>/dev/null` が動作しない | Unix構文はPowerShellでは無効 | `2>$null` を使用 |
+| 文字列の引用符でエラー | PowerShellではエスケープ規則が異なる | シングルクォート `'...'` を使用 |
+| ファイル入力 `<` が動作しない | リダイレクト構文が異なる | `Get-Content file -Raw \| command` |
+
+### コマンド構文の比較
+
+**Codex CLI:**
+```bash
+# Unix/macOS
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "question" 2>/dev/null
+
+# Windows PowerShell
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto 'question' 2>$null
+```
+
+**Gemini CLI:**
+```bash
+# Unix/macOS
+gemini -p "question" 2>/dev/null
+
+# Windows PowerShell
+gemini -p 'question' 2>$null
+```
+
+**マルチモーダル（ファイル入力）:**
+```bash
+# Unix/macOS
+gemini -p "extract" < file.pdf 2>/dev/null
+
+# Windows PowerShell
+Get-Content file.pdf -Raw | gemini -p 'extract' 2>$null
+```
+
+### PATH問題の解決
+
+```powershell
+# 現在のセッションでPATHを追加
+$env:PATH += ";$env:APPDATA\npm"
+
+# またはフルパスを使用
+& "$env:APPDATA\npm\codex.cmd" exec --model gpt-5.2-codex ...
+& "$env:APPDATA\npm\gemini.cmd" -p "..."
+```
+
+### 詳細なガイド
+
+- `.claude/rules/codex-delegation.md` - Codex CLI詳細
+- `.claude/rules/gemini-delegation.md` - Gemini CLI詳細
+- `.claude/skills/codex-system/SKILL.md` - Codexスキル詳細
+- `.claude/skills/gemini-system/SKILL.md` - Geminiスキル詳細
+
+---
+
 ## Language Protocol
 
 - **思考・コード**: 英語
