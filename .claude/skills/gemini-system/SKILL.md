@@ -78,12 +78,58 @@ Task tool parameters:
 
 For quick questions expecting brief answers:
 
+**Unix/macOS:**
 ```bash
 gemini -p "Brief question"
 ```
 
+**Windows PowerShell:**
+```powershell
+gemini -p 'Brief question'
+```
+
+### Windows PowerShell Compatibility (IMPORTANT)
+
+When using Gemini CLI from Windows PowerShell, be aware of these differences:
+
+| Feature | Unix/macOS | Windows PowerShell |
+|---------|------------|-------------------|
+| **Suppress stderr** | `2>/dev/null` | `2>$null` |
+| **Command name** | `gemini` | `gemini` (or `gemini.cmd` if path issues) |
+| **File input** | `< file.pdf` | `Get-Content file.pdf -Raw \| gemini -p "..."` |
+| **String escaping** | `"` works | Use single quotes `'` for outer quotes |
+
+**Example with stderr suppression:**
+
+Unix/macOS:
+```bash
+gemini -p "Research topic" 2>/dev/null
+```
+
+Windows PowerShell:
+```powershell
+gemini -p 'Research topic' 2>$null
+```
+
+**Multimodal (File Input) on Windows:**
+
+Unix/macOS:
+```bash
+gemini -p "Extract content" < file.pdf 2>/dev/null
+```
+
+Windows PowerShell:
+```powershell
+Get-Content file.pdf -Raw | gemini -p 'Extract content' 2>$null
+```
+
+**If `gemini` command not found on Windows:**
+- Ensure npm global packages are in PATH: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use full path: `& "$env:APPDATA\npm\gemini.cmd" ...`
+
 ### CLI Options Reference
 
+**Unix/macOS:**
 ```bash
 # Codebase analysis
 gemini -p "{question}" --include-directories .
@@ -93,6 +139,18 @@ gemini -p "{prompt}" < /path/to/file.pdf
 
 # JSON output
 gemini -p "{question}" --output-format json
+```
+
+**Windows PowerShell:**
+```powershell
+# Codebase analysis
+gemini -p '{question}' --include-directories . 2>$null
+
+# Multimodal (PDF/video/audio)
+Get-Content /path/to/file.pdf -Raw | gemini -p '{prompt}' 2>$null
+
+# JSON output
+gemini -p '{question}' --output-format json 2>$null
 ```
 
 ### Workflow (Subagent)
@@ -122,6 +180,7 @@ This allows Claude and Codex to reference the research later.
 
 ### Pre-Implementation Research
 
+**Unix/macOS:**
 ```bash
 gemini -p "Research best practices for {feature} in Python 2025.
 Include:
@@ -129,18 +188,40 @@ Include:
 - Library recommendations (with comparison)
 - Performance considerations
 - Security concerns
-- Code examples"
+- Code examples" 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+gemini -p 'Research best practices for {feature} in Python 2025.
+Include:
+- Common patterns and anti-patterns
+- Library recommendations (with comparison)
+- Performance considerations
+- Security concerns
+- Code examples' 2>$null
 ```
 
 ### Repository Analysis
 
+**Unix/macOS:**
 ```bash
 gemini -p "Analyze this repository:
 1. Architecture overview
 2. Key modules and responsibilities
 3. Data flow between components
 4. Entry points and extension points
-5. Existing patterns to follow" --include-directories .
+5. Existing patterns to follow" --include-directories . 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+gemini -p 'Analyze this repository:
+1. Architecture overview
+2. Key modules and responsibilities
+3. Data flow between components
+4. Entry points and extension points
+5. Existing patterns to follow' --include-directories . 2>$null
 ```
 
 ### Library Research
@@ -149,15 +230,29 @@ See: `references/lib-research-task.md`
 
 ### Multimodal Analysis
 
+**Unix/macOS:**
 ```bash
 # Video
-gemini -p "Analyze video: main concepts, key points, timestamps" < tutorial.mp4
+gemini -p "Analyze video: main concepts, key points, timestamps" < tutorial.mp4 2>/dev/null
 
 # PDF
-gemini -p "Extract: API specs, examples, constraints" < api-docs.pdf
+gemini -p "Extract: API specs, examples, constraints" < api-docs.pdf 2>/dev/null
 
 # Audio
-gemini -p "Transcribe and summarize: decisions, action items" < meeting.mp3
+gemini -p "Transcribe and summarize: decisions, action items" < meeting.mp3 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+# Video (requires binary-safe reading)
+$bytes = [System.IO.File]::ReadAllBytes("tutorial.mp4")
+gemini -p 'Analyze video: main concepts, key points, timestamps' 2>$null
+
+# PDF
+Get-Content api-docs.pdf -Raw | gemini -p 'Extract: API specs, examples, constraints' 2>$null
+
+# Audio
+Get-Content meeting.mp3 -Raw | gemini -p 'Transcribe and summarize: decisions, action items' 2>$null
 ```
 
 ## Integration with Codex
