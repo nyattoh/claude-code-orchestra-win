@@ -69,9 +69,41 @@ Task tool parameters:
 
 For quick questions expecting 1-2 sentence answers:
 
+**Unix/macOS:**
 ```bash
 codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question"
 ```
+
+**Windows PowerShell:**
+```powershell
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question"
+```
+
+### Windows PowerShell Compatibility (IMPORTANT)
+
+When using Codex CLI from Windows PowerShell, be aware of these differences:
+
+| Feature | Unix/macOS | Windows PowerShell |
+|---------|------------|-------------------|
+| **Suppress stderr** | `2>/dev/null` | `2>$null` or use `| Out-Null` |
+| **Command name** | `codex` | `codex` (or `codex.cmd` if path issues) |
+| **String escaping** | `"` works | Use single quotes `'` for outer quotes |
+
+**Example with stderr suppression:**
+
+Unix/macOS:
+```bash
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Review this code" 2>/dev/null
+```
+
+Windows PowerShell:
+```powershell
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto 'Review this code' 2>$null
+```
+
+**If `codex` command not found on Windows:**
+- Ensure npm global packages are in PATH: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use full path: `& "$env:APPDATA\npm\codex.cmd" ...`
 
 ### Workflow (Subagent)
 
@@ -97,6 +129,7 @@ codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question
 
 ### Design Review
 
+**Unix/macOS:**
 ```bash
 codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
 Review this design approach for: {feature}
@@ -109,11 +142,28 @@ Evaluate:
 2. Alternative approaches?
 3. Potential issues?
 4. Recommendations?
-"
+" 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto '
+Review this design approach for: {feature}
+
+Context:
+{relevant code or architecture}
+
+Evaluate:
+1. Is this approach sound?
+2. Alternative approaches?
+3. Potential issues?
+4. Recommendations?
+' 2>$null
 ```
 
 ### Debug Analysis
 
+**Unix/macOS:**
 ```bash
 codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "
 Debug this issue:
@@ -123,7 +173,20 @@ Code: {relevant code}
 Context: {what was happening}
 
 Analyze root cause and suggest fixes.
-"
+" 2>/dev/null
+```
+
+**Windows PowerShell:**
+```powershell
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto '
+Debug this issue:
+
+Error: {error message}
+Code: {relevant code}
+Context: {what was happening}
+
+Analyze root cause and suggest fixes.
+' 2>$null
 ```
 
 ### Code Review
