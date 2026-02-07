@@ -81,6 +81,7 @@ Ask yourself: "Am I about to make a non-trivial decision?"
 
 Use Task tool with `subagent_type: "general-purpose"`:
 
+**Unix/macOS:**
 ```
 Task tool parameters:
 - subagent_type: "general-purpose"
@@ -99,16 +100,57 @@ Task tool parameters:
     - Any concerns or risks
 ```
 
+**Windows PowerShell:**
+```
+Task tool parameters:
+- subagent_type: "general-purpose"
+- run_in_background: true (for parallel work)
+- prompt: |
+    {Task description}
+
+    Call Codex CLI:
+    codex exec --model gpt-5.2-codex --sandbox read-only --full-auto '
+    {Question for Codex}
+    ' 2>$null
+
+    Return CONCISE summary:
+    - Key recommendation
+    - Main rationale (2-3 points)
+    - Any concerns or risks
+```
+
 ### Direct Call (Only When Necessary)
 
 Only use direct Bash call when:
 - Quick, simple question (< 1 paragraph response expected)
 - Subagent overhead not justified
 
+**Unix/macOS:**
 ```bash
 # Only for simple queries
 codex exec --model gpt-5.2-codex --sandbox read-only --full-auto "Brief question" 2>/dev/null
 ```
+
+**Windows PowerShell:**
+```powershell
+# Only for simple queries
+codex exec --model gpt-5.2-codex --sandbox read-only --full-auto 'Brief question' 2>$null
+```
+
+### Windows PowerShell Compatibility
+
+**IMPORTANT:** When running on Windows PowerShell, command syntax differs:
+
+| Feature | Unix/macOS | Windows PowerShell |
+|---------|------------|-------------------|
+| **Suppress stderr** | `2>/dev/null` | `2>$null` |
+| **String quotes** | `"..."` | Use single quotes `'...'` |
+| **Command name** | `codex` | `codex` (or `codex.cmd`) |
+
+**Troubleshooting on Windows:**
+- If `codex` command not found: Ensure npm global packages are in PATH
+- Add to PATH: `$env:PATH += ";$env:APPDATA\npm"`
+- Or use full path: `& "$env:APPDATA\npm\codex.cmd" ...`
 
 ### Sandbox Modes
 
