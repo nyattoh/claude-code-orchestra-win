@@ -22,11 +22,28 @@ git clone --depth 1 https://github.com/DeL-TaiseiOzaki/claude-code-orchestra.git
 
 ### Windows (PowerShell)
 
-既存プロジェクトのルートで実行:
+既存プロジェクトのルートで実行（自動セットアップ）:
 
 ```powershell
 irm https://raw.githubusercontent.com/nyattoh/claude-code-orchestra-win/main/setup.ps1 | iex
 ```
+
+または、手動でセットアップする場合:
+
+```powershell
+# 1. クローン
+git clone --depth 1 https://github.com/nyattoh/claude-code-orchestra-win.git .starter
+# 2. 設定ファイルのコピー
+Copy-Item -Path .starter/.claude, .starter/.codex, .starter/.gemini, .starter/CLAUDE.md -Destination .\ -Recurse -Force
+# 3. 一時ディレクトリの削除
+Remove-Item -Path .starter -Recurse -Force
+# 4. 実行
+claude
+```
+
+#### Windows環境でのトラブルシューティング
+- **パスの問題**: `.claude/settings.json` 内で `$CLAUDE_PROJECT_DIR` が使われている場合、Windowsでは正しく展開されないことがあります。その場合は `./` に置換してください（最新版では修正済み）。
+- **Pythonの実行**: フックの実行には Python 3.10 以上が必要です。`python` コマンドがパスに通っていることを確認してください。
 
 ## Prerequisites
 
@@ -253,6 +270,10 @@ uv run ruff check .
 | `agent-router.py` | ユーザー入力 | Codex/Geminiへのルーティング提案 |
 | `lint-on-save.py` | ファイル保存 | 自動lint実行 |
 | `check-codex-before-write.py` | ファイル書き込み前 | Codex相談提案 |
+| `check-codex-after-plan.py` | タスク完了後 | Codex計画レビュー提案 |
+| `post-test-analysis.py` | テスト/ビルド失敗 | Codexデバッグ分析提案 |
+| `post-implementation-review.py` | 一定量の実装後 | Codexコードレビュー提案 |
+| `suggest-gemini-research.py` | Web検索/取得時 | Geminiリサーチ提案 |
 | `log-cli-tools.py` | Codex/Gemini実行 | 入出力ログ記録 |
 
 ## Language Rules
